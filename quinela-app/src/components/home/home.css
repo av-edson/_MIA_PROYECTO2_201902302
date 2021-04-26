@@ -1,0 +1,54 @@
+html,
+body {
+  height: 100%;
+}
+
+.body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  opacity: 0.83;
+  background-color: #9c9b9b;
+}
+
+.form-signin {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+  opacity: 100%;
+}
+
+
+.form-signin .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+img{
+  width: 100%;
+  height: auto;
+  background-image: url(./copa.jpg);
+}
+
+@supports(object-fit: cover){
+  .box img{
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+button{
+  margin-bottom: 10px;
+}

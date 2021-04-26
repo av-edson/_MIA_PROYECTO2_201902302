@@ -1,0 +1,19 @@
+body{padding-top:30px;}
+.glyphicon {  margin-bottom: 10px;margin-right: 10px;}
+
+small {
+display: block;
+line-height: 1.428571429;
+color: #999;
+}
+.lbl{
+    color: black;
+}
+.container{
+    background-color: rgb(71, 57, 73);
+    height: 300px;
+    color: white;
+}
+.modal{
+    color: black;
+}
