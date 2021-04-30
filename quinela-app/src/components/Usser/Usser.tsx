@@ -1,11 +1,12 @@
 import './Usser.css'
-import {Link} from 'react-router-dom'
+import {Link, Route, useRouteMatch} from 'react-router-dom'
 import React from 'react';
+import { Switch } from 'react-if';
+import { UsserProfile } from '../UsserProfile/UsserProfile';
 
+export function NavBar(){
 
-export class NavBar extends React.Component {
-
-  render() {
+    let {path} = useRouteMatch()
     return ( 
       <div>
         <div className="barra">
@@ -75,10 +76,18 @@ export class NavBar extends React.Component {
         </div>
         </nav>
       </div>
+      
+        <Switch>
+          <Route exact path={path}>
+            <UsserProfile/>
+          </Route>
+        </Switch>
+
       </div>
     
     );
-    }
-
 
 }
+
+
+

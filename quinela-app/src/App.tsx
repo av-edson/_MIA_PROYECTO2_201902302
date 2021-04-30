@@ -8,36 +8,37 @@ import { RecompensasUsser } from "./components/Recompensas/Recompensas";
 import { ResultadosUsser } from "./components/Resultados/Resultados";
 import { TablaPosiciones } from "./components/TablaPosiciones/TablaPosiciones";
 import './App.css'
-import {BrowserRouter as Router, Redirect, Route} from 'react-router-dom'
-import React from 'react';
+import {Redirect, Route,Router} from 'react-router-dom'
+import history from "./code/history";
 
 function App() {
   return (
     <div className="App">
       <h1 className="header">Bienvenido Quinela App</h1>
-      <Router>
+      <Router history={history}>
         <Route exact path="/">
             <Home/>
           </Route>
           <Route exact path="/RecuperarPass">
             <Recupera/>
           </Route>
-          <Route exact path="/Usser">
+          <Route  path="/Usser">
             <NavBar/>
-            <UsserProfile/>
           </Route>
-          <Route exact path="/Usser/Profile">
-            <NavBar/>
-            <UsserProfile/>
-          </Route>
-          <Route exact path="/Usser/Membreship">
-            <NavBar/>
-            <MembresiaUsser/>
-          </Route>
-          <Route exact path="/Usser/Event"><NavBar/><EventosUsser/></Route>
-          <Route exact path="/Usser/Resultados"><NavBar/><ResultadosUsser/></Route>
-          <Route exact path="/Usser/TablaPosiciones"><NavBar/><TablaPosiciones/></Route>
-          <Route exact path="/Usser/Recompensas"><NavBar/><RecompensasUsser/></Route>
+                <Route
+                path="/Usser"
+                render={({ match: { url } }) => (
+                  <>
+                    <Route path={`${url}/`} component={UsserProfile} exact />
+                    <Route path={`${url}/Profile`} component={UsserProfile} />
+                    <Route path={`${url}/Membreship`} component={MembresiaUsser} />
+                    <Route path={`${url}/Event`} component={EventosUsser} />
+                    <Route path={`${url}/Resultados`} component={ResultadosUsser} />
+                    <Route path={`${url}/TablaPosiciones`} component={TablaPosiciones} />
+                    <Route path={`${url}/Recompensas`} component={RecompensasUsser} />
+                  </>
+                )}
+              />
           <Route path="/404" component={Home} />
           <Redirect to="/" />
       </Router>

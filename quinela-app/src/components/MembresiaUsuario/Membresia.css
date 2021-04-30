@@ -1,0 +1,16 @@
+.contenedor{
+    margin: auto;
+    width: 500px;
+}
+.form-check{
+    margin-bottom: 5px;
+}
+.bbt{
+    margin-right: 5px;
+}
+.cambio{
+    background-color: rgb(129, 126, 126);
+}
+.chbox{
+    margin-left: 10px;
+}
