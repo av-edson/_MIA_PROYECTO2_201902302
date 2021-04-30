@@ -9,10 +9,11 @@ import (
 	"../models"
 	"./db"
 	"./funciones"
+	"./masive"
 )
 
 func GetP(w http.ResponseWriter, r *http.Request) {
-
+	//fmt.Println(funciones.GetMD5Hash("1234"))
 	salida := db.GetUsuarios()
 	if salida != nil {
 		w.Header().Set("Content-Type", "application/json")
@@ -21,6 +22,10 @@ func GetP(w http.ResponseWriter, r *http.Request) {
 	} else {
 		fmt.Fprintf(w, "Error en consulta")
 	}
+	//w.Header().Set("Content-Type", "application/json")
+	//w.WriteHeader(http.StatusCreated)
+	//json.NewEncoder(w).Encode(salida)
+
 }
 
 func ValidarLogin(w http.ResponseWriter, r *http.Request) {
@@ -76,6 +81,30 @@ func CambiarPass(w http.ResponseWriter, r *http.Request) {
 		mens.Value = false
 	}
 
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(mens)
+}
+
+func CargaMasiva(w http.ResponseWriter, r *http.Request) {
+	var path models.Mensaje
+	reqBody, err := ioutil.ReadAll(r.Body)
+	var mens models.Mensaje
+	if err != nil {
+		mens.Ms = "Error al leer el json pasa cargar dato"
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(mens)
+	}
+	// leyendo datos de post
+	json.Unmarshal(reqBody, &path)
+	// llamando al db controller
+	if masive.Cargar(path.Ms) {
+		mens.Ms = "Cargado Con exito"
+		mens.Value = true
+	} else {
+		mens.Ms = "Hubo un problema al aplicar la carga masiva"
+	}
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(mens)

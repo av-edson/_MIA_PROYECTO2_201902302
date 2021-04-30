@@ -37,11 +37,13 @@ class Home extends React.Component{
                          <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1 4 11.794z"/>
                         </svg>Soy Admind</button>: 
                         <button className="w-100 btn btn-lg btn-outline-primary" type="button" >Cargando....</button>}
-                <button type="button" className="w-100 btn btn-lg btn-outline-success">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">
+                    {!this.state.isLoading?
+                        <button type="button" className="w-100 btn btn-lg btn-outline-success" onClick={()=>this.loginUser(this.state.usuario,this.state.pass)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                        </svg>
-                    Soy Usuario</button>
+                        </svg>Soy Usuario</button>:
+                        <button className="w-100 btn btn-lg btn-outline-primary" type="button" >Cargando....</button>}
+                
                     <Link to="/RecuperarPass">
                     <button type="button" className="w-100 btn btn-lg btn-outline-secondary">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-key-fill" viewBox="0 0 16 16">
@@ -52,6 +54,25 @@ class Home extends React.Component{
             </form>
             </div></div>
         ); 
+    }
+
+    loginAdmind(usuario:string,pass:string){
+        this.setState({isLoading:true})
+        var jsonEnviar:UserPass = {UsserName:usuario,Password:pass}
+        fetch('http://localhost:4200/usser/login',{
+            method:'POST',
+           headers: {"Content-Type":"application/json"},
+           body:JSON.stringify(jsonEnviar)
+        })
+        .then(async response => {
+            const json = await response.json() 
+            if(!json.Value){alert(json.Ms)}
+            else{
+                alert(json.Ms)
+                this.setState({passCambiada:true})
+                history.push("/Usser")
+            }this.setState({isLoading:false})}
+            )
     }
 
     loginUser(usuario:string,pass:string){

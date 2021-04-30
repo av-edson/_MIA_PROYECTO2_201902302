@@ -23,14 +23,7 @@ func main() {
 	fmt.Println("Iniciando coneccion a la base de datos...")
 
 	//seteando coneccion con la DB
-	db, err := config.SetConection()
-	if err != nil {
-		fmt.Println(err)
-		return
-	} else {
-		fmt.Println("Conexion exitosa!!")
-	}
-	defer db.Close()
+	config.IniciarDB()
 
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -38,6 +31,7 @@ func main() {
 	router.HandleFunc("/hola", controllers.GetP).Methods("GET")
 	router.HandleFunc("/usser/login", controllers.ValidarLogin).Methods("POST")
 	router.HandleFunc("/usser/changePass", controllers.CambiarPass).Methods("POST")
+	router.HandleFunc("/MasiveLoad", controllers.CargaMasiva).Methods("POST")
 
 	// configurando servidor
 	//log.Fatal(http.ListenAndServe(config.GetPort(), router))

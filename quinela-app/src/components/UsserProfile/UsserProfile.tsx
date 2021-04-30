@@ -1,8 +1,22 @@
 import React from 'react';
 import './UsserProfile.css';
 import {Link} from 'react-router-dom'
+import { UserPass } from '../../models/usuarioModel';
 
 export class UsserProfile extends React.Component {
+
+  constructor(props:any){
+    super(props);
+    this.state.usuario = props.usuario
+  }
+
+  state = {
+    usuario: '',
+    pass: '',
+    loading:false,
+    mensajeRetorno:''
+  }
+
     render() {
         return (
           <div className="container">
@@ -34,7 +48,8 @@ export class UsserProfile extends React.Component {
                   <form>
                           <h1 className="h3 mb-3 fw-normal">Cambiar Contrasena</h1>
                       <div className="form-floating">
-                          <input type="password" className="form-control" id="floatingPassword" placeholder="Password"/>
+                          <input type="password" className="form-control" id="floatingPassword" placeholder="Password"
+                            defaultValue={this.state.pass}  onChange={(e)=>{this.setState({pass: e.target.value})}}/>
                           <label className="lbl" htmlFor="floatingPassword">Nueva Contrasena</label>      
                           <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Guardar</button>
                       </div>
@@ -48,10 +63,10 @@ export class UsserProfile extends React.Component {
                   <div className="modal-dialog">
                     <div className="modal-content">
                       <div className="modal-header">
-                        <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <h5 className="modal-title" id="exampleModalLabel">Quinela Dice:</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      <div className="modal-body">Mensaje de Retorno XD</div>
+                      <div className="modal-body">{this.state.mensajeRetorno}</div>
                       <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                       </div>
@@ -62,6 +77,22 @@ export class UsserProfile extends React.Component {
         );
     }
 
-
+    cambiarPass(usuario:string,pass:string){
+      this.setState({loading:true})
+      var jsonEnviar:UserPass = {UsserName:usuario,Password:pass}
+       fetch('http://localhost:4200/usser/changePass',{
+         method:'POST',
+         headers: {"Content-Type":"application/json"},
+         body:JSON.stringify(jsonEnviar)
+       }).then(async response => {
+        const json = await response.json() 
+        if (json.Value === false){ alert(json.Ms)}
+        else{
+          alert("Contrasena Cambiada Con Exito")
+          this.setState({passCambiada:true})
+          }
+        this.setState({loading:false})
+      })
+    }
 }
 
