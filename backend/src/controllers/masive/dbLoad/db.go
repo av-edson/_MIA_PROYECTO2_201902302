@@ -76,6 +76,8 @@ func GetId(tipo int, db *sql.DB) int {
 		consulta = "SELECT COUNT(*) FROM JORNADA"
 	case 5:
 		consulta = "SELECT COUNT(*) FROM EVENTO"
+	case 6:
+		consulta = "SELECT COUNT(*) FROM PREDICCION"
 
 	}
 	rows, err := db.Query(consulta)

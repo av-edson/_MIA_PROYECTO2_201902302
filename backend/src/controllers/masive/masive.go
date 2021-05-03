@@ -70,6 +70,7 @@ func ingresarDatos(c EstructurasLoad.Datos, db *sql.DB) {
 				for _, deporte := range jornada.Predicciones {
 					meterDeporte(deporte.Deporte, db)
 					meterEvento(temporada.Temporada, jornada.Jornada, deporte.Deporte, deporte.Local, deporte.Visitante, deporte.Resultado.Local, deporte.Resultado.Visitante, db)
+					meterPrediccion(deporte, temporada.Temporada, jornada.Jornada, c.Inicial.Username, db)
 				}
 			}
 		}
@@ -78,18 +79,18 @@ func ingresarDatos(c EstructurasLoad.Datos, db *sql.DB) {
 }
 
 func meterTemporada(nombre string, db *sql.DB) {
-	if dbLoad.VerificarEnTabla(nombre, 2, db) != 0 {
+	res := dbLoad.VerificarEnTabla(nombre, 2, db)
+	if res != 0 {
 		return
+	} else {
+		fechaInicio, fechaFin := getFechas(nombre)
+		dbLoad.InsertarTemporada(nombre, fechaInicio, fechaFin, db)
 	}
-	fechaInicio, fechaFin := getFechas(nombre)
-	//fmt.Println(fechaInicio)
-	//fmt.Println(fechaFin)
-	//fmt.Println("------------------------")
-	dbLoad.InsertarTemporada(nombre, fechaInicio, fechaFin, db)
 }
 
 func meterDeporte(nombre string, db *sql.DB) {
-	if dbLoad.VerificarEnTabla(nombre, 1, db) != 0 {
+	res := dbLoad.VerificarEnTabla(nombre, 1, db)
+	if res != 0 {
 		return
 	} else {
 		//fmt.Println(nombre)
@@ -179,6 +180,19 @@ func meterEvento(temporada string, jornada string, deporte string, local string,
 	idJornada := dbLoad.Consulta("SELECT IDJORNADA FROM JORNADA WHERE IDTEMPORADA="+idTemporada+" AND NOMBRE='"+jornada+"'", db)
 	idDeporte := dbLoad.Consulta("SELECT IDDEPORTE FROM DEPORTE WHERE DESCRIPCION='"+deporte+"'", db)
 	consulta := "INSERT INTO EVENTO VALUES(" + idEvento + ",'" + local + "','" + visitante + "'," + puntosLocal + "," + puntosVisita + "," + idJornada + "," + idDeporte + ")"
-	//fmt.Println(consulta)
+	// fmt.Println(consulta)
 	dbLoad.ConsultaSinRegreso(consulta, db)
+}
+
+func meterPrediccion(deporte EstructurasLoad.Deporte, temporada string, jornada string, use string, db *sql.DB) {
+	idTemporada := dbLoad.Consulta("SELECT IDTEMPORADA FROM TEMPORADA WHERE NOMBRE='"+temporada+"'", db)
+	idJornada := dbLoad.Consulta("SELECT IDJORNADA FROM JORNADA WHERE IDTEMPORADA="+idTemporada+" AND NOMBRE='"+jornada+"'", db)
+	consulta := "SELECT IDEVENTO FROM EVENTO WHERE IDJORNADA=" + idJornada + " AND ELOCAL='" + deporte.Local + "' AND EVISITANTE='" + deporte.Visitante + "' AND PREDICCIONLOCALFIN=" + deporte.Resultado.Local + " AND PREDICCIONVISITANTEFIN=" + deporte.Resultado.Visitante
+	idEvento := dbLoad.Consulta(consulta, db)
+	idUsuario := dbLoad.Consulta("SELECT IDUSUARIO FROM USUARIO WHERE USSER='"+use+"'", db)
+	idPrediccion := strconv.Itoa(dbLoad.GetId(6, db) + 1)
+	consulta = "INSERT INTO PREDICCION VALUES(" + idPrediccion + "," + idEvento + "," + idUsuario + "," + deporte.Resultado.Local + "," + deporte.Resultado.Visitante + ")"
+	//fmt.Println(consulta)
+	dbLoad.Consulta(consulta, db)
+	//idEvento := dbLoad.Consulta("SELECT IDEVENTO FROM EVENTO WHERE",db)
 }

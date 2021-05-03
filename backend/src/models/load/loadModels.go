@@ -5,7 +5,7 @@ type prediccion struct {
 	Local     string `yaml:"local"`
 }
 
-type deporte struct {
+type Deporte struct {
 	Deporte    string     `yaml:"deporte"`
 	Fecha      string     `yaml:"fecha"`
 	Visitante  string     `yaml:"visitante"`
@@ -16,7 +16,7 @@ type deporte struct {
 
 type jornada struct {
 	Jornada      string    `yaml:"jornada"`
-	Predicciones []deporte `yaml:"predicciones"`
+	Predicciones []Deporte `yaml:"predicciones"`
 }
 
 type temporada struct {
