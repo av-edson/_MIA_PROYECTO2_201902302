@@ -20,7 +20,7 @@ import (
 
 func index(w http.ResponseWriter, r *http.Request) {
 	///home/edson/Descargas/quinielas.yaml
-	file, err := os.Open("/home/edson/Descargas/quinielas.yaml")
+	file, err := os.Open("/home/edson/Descargas/quinielas-2.yaml")
 	//file, err := os.Open("/home/edson/Escritorio/pequeno.yaml")
 	if err != nil {
 		fmt.Println("-----------------------------------------------------")
@@ -29,17 +29,17 @@ func index(w http.ResponseWriter, r *http.Request) {
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
 	noUsuario := 2
-	contenido := ""
+	contenido := "Usuarios:\n"
 	for scanner.Scan() {
 		var linea string = scanner.Text()
 		ll := string(linea)
 		esLineaIicio := strings.Index(ll, "A"+strconv.Itoa(noUsuario))
 		if esLineaIicio != -1 {
 			ll = strings.Replace(ll, ":", "", -1)
-			ll = strings.Replace(ll, "A", "Usser: A", -1)
+			ll = strings.Replace(ll, "A", "- Usser:\n		us: A", -1)
 			noUsuario++
 		}
-		contenido += ll + "\n"
+		contenido += "	" + ll + "\n"
 
 	}
 	bits := []byte(contenido)

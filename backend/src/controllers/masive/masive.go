@@ -16,9 +16,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-func readConf(filename string) (EstructurasLoad.Datos, error) {
-	c := EstructurasLoad.Datos{}
-
+func readConf(filename string) (EstructurasLoad.Usuario, error) {
+	c := EstructurasLoad.Usuario{}
+	fmt.Println(filename)
 	buf, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return c, err
@@ -26,6 +26,7 @@ func readConf(filename string) (EstructurasLoad.Datos, error) {
 
 	err = yaml.Unmarshal(buf, &c)
 	if err != nil {
+		fmt.Println("cagadales")
 		return c, fmt.Errorf("in file %q: %v", filename, err)
 	}
 
@@ -55,27 +56,122 @@ func Cargar(path string) bool {
 		return false
 	}
 	defer db.Close()
-	ingresarDatos(c, db)
+	// for _, user := range c.Usuarios {
+	// 	fmt.Println(user.Inicial.ID)
+	// }
+	usuarios := regresarLista(c)
+	fmt.Println(usuarios[0].Nombre)
+	for _, item := range usuarios {
+		ingresarDatos(item, db)
+	}
+	//ingresarDatos(c, db)
 	//read(path)
 	return true
 }
 
-func ingresarDatos(c EstructurasLoad.Datos, db *sql.DB) {
-	dbLoad.InsertarUsuario(c.Inicial.Username, funciones.GetMD5Hash(c.Inicial.Password), c.Inicial.Nombre, c.Inicial.Apellido)
-	for _, temporada := range c.Inicial.Resultados {
+func regresarLista(c EstructurasLoad.Usuario) []EstructurasLoad.Inicial {
+	var usuarios []EstructurasLoad.Inicial
+	usuarios = append(usuarios, c.U2)
+	usuarios = append(usuarios, c.U3)
+	usuarios = append(usuarios, c.U4)
+	usuarios = append(usuarios, c.U5)
+	usuarios = append(usuarios, c.U6)
+	usuarios = append(usuarios, c.U7)
+	usuarios = append(usuarios, c.U8)
+	usuarios = append(usuarios, c.U9)
+	usuarios = append(usuarios, c.U10)
+	usuarios = append(usuarios, c.U11)
+	usuarios = append(usuarios, c.U12)
+	usuarios = append(usuarios, c.U13)
+	usuarios = append(usuarios, c.U14)
+	usuarios = append(usuarios, c.U15)
+	usuarios = append(usuarios, c.U16)
+	usuarios = append(usuarios, c.U17)
+	usuarios = append(usuarios, c.U18)
+	usuarios = append(usuarios, c.U19)
+	usuarios = append(usuarios, c.U20)
+	usuarios = append(usuarios, c.U21)
+	usuarios = append(usuarios, c.U22)
+	usuarios = append(usuarios, c.U23)
+	usuarios = append(usuarios, c.U24)
+	usuarios = append(usuarios, c.U25)
+	usuarios = append(usuarios, c.U26)
+	usuarios = append(usuarios, c.U27)
+	usuarios = append(usuarios, c.U28)
+	usuarios = append(usuarios, c.U29)
+	usuarios = append(usuarios, c.U30)
+	usuarios = append(usuarios, c.U31)
+	usuarios = append(usuarios, c.U32)
+	usuarios = append(usuarios, c.U33)
+	usuarios = append(usuarios, c.U34)
+	usuarios = append(usuarios, c.U35)
+	usuarios = append(usuarios, c.U36)
+	usuarios = append(usuarios, c.U37)
+	usuarios = append(usuarios, c.U38)
+	usuarios = append(usuarios, c.U39)
+	usuarios = append(usuarios, c.U40)
+	usuarios = append(usuarios, c.U41)
+	usuarios = append(usuarios, c.U42)
+	usuarios = append(usuarios, c.U43)
+	usuarios = append(usuarios, c.U44)
+	usuarios = append(usuarios, c.U45)
+	usuarios = append(usuarios, c.U46)
+	usuarios = append(usuarios, c.U47)
+	usuarios = append(usuarios, c.U48)
+	usuarios = append(usuarios, c.U49)
+	usuarios = append(usuarios, c.U50)
+	usuarios = append(usuarios, c.U51)
+	usuarios = append(usuarios, c.U52)
+	usuarios = append(usuarios, c.U53)
+	usuarios = append(usuarios, c.U54)
+	usuarios = append(usuarios, c.U55)
+	usuarios = append(usuarios, c.U56)
+	usuarios = append(usuarios, c.U57)
+	usuarios = append(usuarios, c.U58)
+	usuarios = append(usuarios, c.U59)
+	usuarios = append(usuarios, c.U60)
+	usuarios = append(usuarios, c.U61)
+	usuarios = append(usuarios, c.U62)
+	usuarios = append(usuarios, c.U63)
+	usuarios = append(usuarios, c.U64)
+	usuarios = append(usuarios, c.U65)
+	usuarios = append(usuarios, c.U66)
+	usuarios = append(usuarios, c.U67)
+	usuarios = append(usuarios, c.U68)
+	usuarios = append(usuarios, c.U69)
+	usuarios = append(usuarios, c.U70)
+	usuarios = append(usuarios, c.U71)
+	return usuarios
+}
+
+func ingresarDatos(c EstructurasLoad.Inicial, db *sql.DB) {
+	dbLoad.InsertarUsuario(c.Username, funciones.GetMD5Hash(c.Password), c.Nombre, c.Apellido)
+	for _, temporada := range c.Resultados {
 		meterTemporada(temporada.Temporada, db)
-		meterMembresiaUsuario(c.Inicial.Username, temporada.Tier, temporada.Temporada, db)
+		meterMembresiaUsuario(c.Username, temporada.Tier, temporada.Temporada, db)
 		for _, jornada := range temporada.Jornadas {
 			if meterJornada(jornada.Jornada, temporada.Temporada, db) {
 				for _, deporte := range jornada.Predicciones {
 					meterDeporte(deporte.Deporte, db)
 					meterEvento(temporada.Temporada, jornada.Jornada, deporte.Deporte, deporte.Local, deporte.Visitante, deporte.Resultado.Local, deporte.Resultado.Visitante, db)
-					meterPrediccion(deporte, temporada.Temporada, jornada.Jornada, c.Inicial.Username, db)
+					meterPrediccion(deporte, temporada.Temporada, jornada.Jornada, c.Username, db)
 				}
 			}
 		}
-
 	}
+	// for _, temporada := range c.Inicial.Resultados {
+	// 	meterTemporada(temporada.Temporada, db)
+	// 	meterMembresiaUsuario(c.Inicial.Username, temporada.Tier, temporada.Temporada, db)
+	// 	for _, jornada := range temporada.Jornadas {
+	// 		if meterJornada(jornada.Jornada, temporada.Temporada, db) {
+	// 			for _, deporte := range jornada.Predicciones {
+	// 				meterDeporte(deporte.Deporte, db)
+	// 				meterEvento(temporada.Temporada, jornada.Jornada, deporte.Deporte, deporte.Local, deporte.Visitante, deporte.Resultado.Local, deporte.Resultado.Visitante, db)
+	// 				meterPrediccion(deporte, temporada.Temporada, jornada.Jornada, c.Inicial.Username, db)
+	// 			}
+	// 		}
+	// 	}
+	// }
 }
 
 func meterTemporada(nombre string, db *sql.DB) {

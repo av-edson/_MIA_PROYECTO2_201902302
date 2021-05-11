@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"../models"
 	"./db"
@@ -13,6 +14,11 @@ import (
 )
 
 func GetP(w http.ResponseWriter, r *http.Request) {
+	for i := 2; i < 72; i++ {
+		// usuarios = append(usuarios, c.U2)
+		var s = "usuarios = append(usuarios, c.U" + strconv.Itoa(i) + ")"
+		fmt.Println(s)
+	}
 	//fmt.Println(funciones.GetMD5Hash("1234"))
 	salida := db.GetUsuarios()
 	if salida != nil {

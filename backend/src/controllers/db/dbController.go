@@ -183,7 +183,7 @@ func GetDeportes() []models.Deporte {
 		var tempUser models.Deporte
 		tempUser.Nombre = id2
 		tempUser.Color = "rojo " + strconv.Itoa(i)
-		tempUser.Src = "https://e00-marca.uecdn.es/assets/multimedia/imagenes/2020/02/26/15827106301335.jpg"
+		tempUser.Src = "https://static.vecteezy.com/system/resources/previews/000/348/985/non_2x/vector-indoor-sport-game-athletic-set-icon-symbol-sign-pictogram.jpg"
 		salida = append(salida, tempUser)
 	}
 	return salida
