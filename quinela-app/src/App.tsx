@@ -7,10 +7,12 @@ import { EventosUsser } from "./components/Eventos/Eventos";
 import { RecompensasUsser } from "./components/Recompensas/Recompensas";
 import { ResultadosUsser } from "./components/Resultados/Resultados";
 import { TablaPosiciones } from "./components/TablaPosiciones/TablaPosiciones";
+import { NavAdmind } from "./components/navBarAdmind/navBarAdmind";
 import './App.css'
 import {Redirect, Route,Router} from 'react-router-dom'
 import history from "./code/history";
 import React from 'react';
+import { RegistroUsuario } from './components/CargaMasiva/RegistroUsuario';
 
 class App extends React.Component {
   handleUsuario = () => {
@@ -28,15 +30,17 @@ class App extends React.Component {
             <Route exact path="/RecuperarPass">
               <Recupera/>
             </Route>
-            <Route  path="/Usser">
-              <NavBar/>
+            <Route exact path="/InicioAdmind/:user" component={NavAdmind}>
             </Route>
-                  <Route
-                  path="/Usser"
+
+            <Route exact path="/RegistroUsuario" component={RegistroUsuario}></Route>
+
+            <Route
+                  path={'/Usser/:user'}
                   render={({ match: { url } }) => (
                     <>
-                      <Route path={`${url}/`} component={UsserProfile} exact />
-                      <Route path={`${url}/Profile`} component={UsserProfile} />
+                    <NavBar/>
+                      <Route path={'/Usser/:user'} component={UsserProfile} exact />
                       <Route path={`${url}/Membreship`} component={MembresiaUsser} />
                       <Route path={`${url}/Event`} component={EventosUsser} />
                       <Route path={`${url}/Resultados`} component={ResultadosUsser} />

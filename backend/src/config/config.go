@@ -79,6 +79,7 @@ func IniciarDB() {
 	}
 	defer rows.Close()
 	db.Query("INSERT INTO USUARIO VALUES(1,'edson','avila','av.edson','81dc9bdb52d04dc20036dbd8313ed055',1)")
+	db.Query("DELETE FROM USUARIO_TRIGGER")
 }
 
 func GetPort() string {

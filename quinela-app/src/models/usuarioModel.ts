@@ -14,3 +14,18 @@ export interface MsReturn{
     Ms:string,
     Value:boolean
 }
+
+export interface SPort{
+    Nombre:string,
+    Color:string,
+    Src:string
+}
+
+export interface Trigger{
+    Username: string,
+    Pass: string,
+    Nombre: string,
+    Apellido: string,
+    Correo: string,
+    Fecha: string
+}

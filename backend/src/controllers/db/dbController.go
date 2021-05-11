@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"strconv"
 
 	"../../config"
 	"../../models"
@@ -45,7 +46,7 @@ func GetUsuarios() []models.UsuarioModel {
 	return salida
 }
 
-func GetPassUsuario(user string) string {
+func GetPassUsuario(user string, pass string) string {
 	db, err := config.SetConection()
 	if err != nil {
 		fmt.Println(err)
@@ -54,7 +55,8 @@ func GetPassUsuario(user string) string {
 	defer db.Close()
 
 	var salida string
-	var consulta = "SELECT PASSUSER FROM USUARIO WHERE USSER = '" + user + "'"
+	consulta := "SELECT COUNT(*) FROM USUARIO WHERE USSER='" + user + "' AND PASSUSER='" + pass + "'"
+	//fmt.Println(consulta)
 	rows, err := db.Query(consulta)
 	if err != nil {
 		fmt.Println("Error running query")
@@ -62,21 +64,26 @@ func GetPassUsuario(user string) string {
 		return ""
 	}
 	defer rows.Close()
-
 	for rows.Next() {
 		rows.Scan(&salida)
 	}
+	//fmt.Println(salida)
 	return salida
 }
 
-func VerificarUserDb(user string) bool {
+func VerificarUserDb(user string, tipo int) bool {
 	db, err := config.SetConection()
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 	defer db.Close()
-	var consulta = "SELECT COUNT(*) FROM USUARIO WHERE USSER='" + user + "'"
+	var consulta = ""
+	if tipo == 1 {
+		consulta = "SELECT COUNT(*) FROM USUARIO WHERE USSER='" + user + "'"
+	} else {
+		consulta = "SELECT COUNT(*) FROM USUARIO_TRIGGER WHERE USERNAME='" + user + "'"
+	}
 	rows, err := db.Query(consulta)
 	if err != nil {
 		fmt.Println("Error running query")
@@ -96,7 +103,7 @@ func VerificarUserDb(user string) bool {
 }
 
 func ActualizarPass(pass string, user string) bool {
-	if !VerificarUserDb(user) {
+	if !VerificarUserDb(user, 1) {
 		return false
 	}
 	db, err := config.SetConection()
@@ -114,4 +121,93 @@ func ActualizarPass(pass string, user string) bool {
 	}
 	defer rows.Close()
 	return true
+}
+
+func GetUsuario(user string) models.UsuarioModel {
+	var temp models.UsuarioModel
+	db, err := sql.Open("godror", "edson/1234@localhost:1521/xe")
+	if err != nil {
+		fmt.Println(err)
+		return temp
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT NOMBRE,APELLIDO,USSER FROM usuario WHERE USSER='" + user + "'")
+	if err != nil {
+		fmt.Println("Error running query")
+		fmt.Println(err)
+		return temp
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var id2 string
+		var id3 string
+		var id4 string
+
+		if err := rows.Scan(&id2, &id3, &id4); err != nil {
+			log.Fatal(err)
+		}
+		var tempUser models.UsuarioModel
+		tempUser.Nombre = id2
+		tempUser.Apellido = id3
+		tempUser.UsserName = id4
+		temp = tempUser
+	}
+	return temp
+}
+
+func GetDeportes() []models.Deporte {
+	db, err := sql.Open("godror", "edson/1234@localhost:1521/xe")
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT DESCRIPCION FROM DEPORTE")
+	if err != nil {
+		fmt.Println("Error running query")
+		fmt.Println(err)
+		return nil
+	}
+	defer rows.Close()
+
+	salida := make([]models.Deporte, 0)
+	i := 0
+	for rows.Next() {
+		var id2 string
+		if err := rows.Scan(&id2); err != nil {
+			log.Fatal(err)
+		}
+		var tempUser models.Deporte
+		tempUser.Nombre = id2
+		tempUser.Color = "rojo " + strconv.Itoa(i)
+		tempUser.Src = "https://e00-marca.uecdn.es/assets/multimedia/imagenes/2020/02/26/15827106301335.jpg"
+		salida = append(salida, tempUser)
+	}
+	return salida
+}
+
+func RegistrarUsuario(data models.Trigger) string {
+	// si ya se encuentra el usuario
+	if VerificarUserDb(data.Username, 2) {
+		return "EL usuario ya existe"
+	}
+	db, err := config.SetConection()
+	if err != nil {
+		fmt.Println(err)
+		return "La conexion a la DB fallo"
+	}
+	defer db.Close()
+	var consulta = "INSERT INTO USUARIO_TRIGGER VALUES('" + data.Username + "','" + data.Nombre + "','" + data.Apellido + "','" + data.Pass + "','" + data.Correo + "',TO_DATE('" + data.Fecha + "','RR-MM-DD'),2)"
+	fmt.Println(consulta)
+	rows, err := db.Query(consulta)
+	if err != nil {
+		fmt.Println("Error running query")
+		fmt.Println(err)
+		return "No paso las validaciones del trigger"
+	}
+	defer rows.Close()
+	return "Ingresado con exito!"
 }
