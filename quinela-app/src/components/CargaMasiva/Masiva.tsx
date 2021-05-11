@@ -39,7 +39,10 @@ export class CargaMasiva extends React.Component{
                         <h5 className="modal-title" id="exampleModalLabel">Quinela Dice:</h5>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
-                      <div className="modal-body">{this.state.mensajeRetorno}</div>
+                      <div className="modal-body">{this.state.cargado? this.state.mensajeRetorno : "Cargando... Por favor Espere"}</div>
+                      {this.state.cargado?<div/> :<div className="spinner-border" role="status">
+                        <span className="sr-only"></span>
+                      </div>}
                       <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                       </div>
@@ -52,7 +55,7 @@ export class CargaMasiva extends React.Component{
       }
 
       CargarDatos(){
-        var jsonEnviar:MsReturn = {Ms:  "/home/edson/Escritorio/pequeno.yaml",Value: false}
+        var jsonEnviar:MsReturn = {Ms:  "/home/edson/Descargas/quinielas-2.yaml",Value: false}
         fetch('http://localhost:4200/MasiveLoad',{
         method:'POST',
         headers: {"Content-Type":"application/json"},

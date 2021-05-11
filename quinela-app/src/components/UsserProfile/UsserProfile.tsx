@@ -17,14 +17,13 @@ export class UsserProfile extends React.Component<MisProps> {
 
   getParams = () => {
     this.params = this.props;
-    //console.log(this.params)
     var usse:string
     if (this.props.uss==='av.edson'){
       usse = this.props.uss
       this.setState({ usuario: this.props.uss});
     }else{
-      usse=this.params.match.params.user
-      this.setState({ usuario: this.params.match.params.user});
+      usse=this.props.uss
+      this.setState({ usuario: this.props.uss});
     }
     //pidiendo los otros datos y setenadolos
     var jsonEnviar:UserPass = {UsserName:usse,Password:''}

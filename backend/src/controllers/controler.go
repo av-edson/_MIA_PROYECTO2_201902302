@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 
 	"../models"
 	"./db"
@@ -14,11 +13,11 @@ import (
 )
 
 func GetP(w http.ResponseWriter, r *http.Request) {
-	for i := 2; i < 72; i++ {
-		// usuarios = append(usuarios, c.U2)
-		var s = "usuarios = append(usuarios, c.U" + strconv.Itoa(i) + ")"
-		fmt.Println(s)
-	}
+	// for i := 2; i < 72; i++ {
+	// 	// usuarios = append(usuarios, c.U2)
+	// 	var s = "usuarios = append(usuarios, c.U" + strconv.Itoa(i) + ")"
+	// 	fmt.Println(s)
+	// }
 	//fmt.Println(funciones.GetMD5Hash("1234"))
 	salida := db.GetUsuarios()
 	if salida != nil {
@@ -164,6 +163,57 @@ func RegistroTrigger(w http.ResponseWriter, r *http.Request) {
 	} else {
 		mens.Value = false
 	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(mens)
+}
+
+func GetDatosMemebresia(w http.ResponseWriter, r *http.Request) {
+	var datos models.Membresia
+	reqBody, err := ioutil.ReadAll(r.Body)
+	var mens models.Membresia
+	if err != nil {
+		var otro models.Mensaje
+		otro.Ms = "No se envio un archivo adecuado al servidor"
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(mens)
+	}
+	json.Unmarshal(reqBody, &datos)
+	//fmt.Println(datos)
+	salida := db.PedirDatosMembresia(datos.Username)
+	fmt.Println(salida)
+	if salida[0] != "" {
+		mens.Username = salida[2]
+		mens.Id = salida[1]
+		mens.Value = true
+	} else {
+		mens.Username = "No se recuperaron datos"
+		mens.Value = false
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(mens)
+}
+
+func ActualizarMembresia(w http.ResponseWriter, r *http.Request) {
+	var datos models.Membresia
+	reqBody, err := ioutil.ReadAll(r.Body)
+	var mens models.Mensaje
+	if err != nil {
+		mens.Ms = "No se envio un archivo adecuado al servidor"
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(mens)
+	}
+	json.Unmarshal(reqBody, &datos)
+	salida := db.ActualizarMembresia(datos.Id, datos.Username)
+	if salida == "Consulta Exitosa!" {
+		mens.Value = true
+	} else {
+		mens.Value = false
+	}
+	mens.Ms = salida
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(mens)

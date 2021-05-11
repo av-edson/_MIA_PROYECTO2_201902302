@@ -29,3 +29,9 @@ export interface Trigger{
     Correo: string,
     Fecha: string
 }
+
+export interface Membresia{
+    Username: string,
+    Id: string
+    Value: boolean
+}

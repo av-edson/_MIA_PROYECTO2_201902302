@@ -211,3 +211,64 @@ func RegistrarUsuario(data models.Trigger) string {
 	defer rows.Close()
 	return "Ingresado con exito!"
 }
+
+func PedirDatosMembresia(data string) []string {
+	salida := make([]string, 0)
+	// si ya se encuentra el usuario
+	db, err := config.SetConection()
+	if err != nil {
+		fmt.Println(err)
+		return salida
+	}
+	defer db.Close()
+	var consulta = "SELECT D.idtemporada,D.idmembresia,m.descripcion,D.idusuario FROM (SELECT *\n" +
+		"FROM usuario_temporada_membresia\n" +
+		"where usuario_temporada_membresia.idusuario=(select idusuario from usuario where usser='" + data + "')\n" +
+		"ORDER BY idtemporada DESC) D, membresia M\n" +
+		"WHERE ROWNUM <= 1 and D.idmembresia=m.idmebresia"
+	rows, err := db.Query(consulta)
+	if err != nil {
+		fmt.Println("Error running query")
+		fmt.Println(err)
+		return salida
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var id1 string
+		var id2 string
+		var id3 string
+		var id4 string
+		if err := rows.Scan(&id1, &id2, &id3, &id4); err != nil {
+			log.Fatal(err)
+		}
+		salida = append(salida, id1)
+		salida = append(salida, id2)
+		salida = append(salida, id3)
+		salida = append(salida, id4)
+
+	}
+	return salida
+}
+
+func ActualizarMembresia(id string, us string) string {
+	db, err := config.SetConection()
+	if err != nil {
+		fmt.Println(err)
+		return "Error de Conexion a la DB"
+	}
+	defer db.Close()
+	var consulta = "update  usuario_temporada_membresia set idmembresia=" + id +
+		"\n where idusuario=(select idusuario from usuario where usser='" + us + "')" +
+		"\n and idtemporada=(select idtemporada from(" +
+		"\n select * from usuario_temporada_membresia where usuario_temporada_membresia.idusuario=(" +
+		"\n select idusuario from usuario where usser='" + us + "')ORDER BY idtemporada DESC)" +
+		"\n WHERE ROWNUM <= 1)"
+	rows, err := db.Query(consulta)
+	if err != nil {
+		fmt.Println("Error running query")
+		fmt.Println(err)
+		return "Error al ejecutar la consulta"
+	}
+	defer rows.Close()
+	return "Consulta Exitosa!"
+}

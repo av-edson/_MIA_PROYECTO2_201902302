@@ -56,7 +56,7 @@ func main() {
 	fmt.Println("Iniciando coneccion a la base de datos...")
 
 	//seteando coneccion con la DB
-	config.IniciarDB()
+	//config.IniciarDB()
 
 	router := mux.NewRouter().StrictSlash(true)
 
@@ -68,6 +68,8 @@ func main() {
 	router.HandleFunc("/MasiveLoad", controllers.CargaMasiva).Methods("POST")
 	router.HandleFunc("/GetDeportes", controllers.GetDeportes).Methods("GET")
 	router.HandleFunc("/RegistrarUsuario", controllers.RegistroTrigger).Methods("POST")
+	router.HandleFunc("/usser/datosMembresia", controllers.GetDatosMemebresia).Methods("Post")
+	router.HandleFunc("/usser/actualizarMembresia", controllers.ActualizarMembresia).Methods("Post")
 
 	// configurando servidor
 	//log.Fatal(http.ListenAndServe(config.GetPort(), router))

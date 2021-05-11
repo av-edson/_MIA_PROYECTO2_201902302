@@ -65,6 +65,10 @@ class Home extends React.Component{
     }
 
     loginAdmind(usuario:string,pass:string){
+        if (usuario !== "av.edson"){
+            alert("No es admind")
+            return;
+        }
         this.setState({isLoading:true})
         var jsonEnviar:UserPass = {UsserName:usuario,Password:pass}
         fetch('http://localhost:4200/usser/login',{

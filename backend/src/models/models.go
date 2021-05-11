@@ -31,3 +31,9 @@ type Deporte struct {
 	Color  string
 	Src    string
 }
+
+type Membresia struct {
+	Username string
+	Id       string
+	Value    bool
+}
