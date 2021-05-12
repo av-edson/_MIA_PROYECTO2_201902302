@@ -120,7 +120,7 @@ type Entrada struct {
 	Usuarios []Inicial
 }
 
-type Resultado struct {
+type TablaPredicciones struct {
 	Deporte    string
 	Local      string
 	Visitante  string

@@ -26,7 +26,6 @@ export class PeUsuario extends React.Component<UsuarioModel>{
                         <h5 className="card-title">Usser: {this.state.UsserName}</h5>
                         <p className="card-text">Nombre: {this.state.Nombre}</p>
                         <p className="card-text">APellido: {this.state.Apellido}</p>
-                        <button type="button" className="btn btn-outline-success">Ver</button>
                     </div>
                 </div>
               </div>
