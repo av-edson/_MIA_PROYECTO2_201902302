@@ -62,6 +62,7 @@ func main() {
 
 	router.HandleFunc("/", index)
 	router.HandleFunc("/hola", controllers.GetP).Methods("GET")
+	router.HandleFunc("/getUsuarios", controllers.GetP).Methods("GET")
 	router.HandleFunc("/usser/login", controllers.ValidarLogin).Methods("POST") // validar login
 	router.HandleFunc("/getUserData", controllers.GetUserData).Methods("POST")  // obtener datos despues del login
 	router.HandleFunc("/usser/changePass", controllers.CambiarPass).Methods("POST")

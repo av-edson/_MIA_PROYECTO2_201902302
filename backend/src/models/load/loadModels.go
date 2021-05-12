@@ -119,3 +119,13 @@ type Usuario struct {
 type Entrada struct {
 	Usuarios []Inicial
 }
+
+type Resultado struct {
+	Deporte    string
+	Local      string
+	Visitante  string
+	Prediccion string
+	Resultado  string
+	Puntos     string
+	Fecha      string
+}

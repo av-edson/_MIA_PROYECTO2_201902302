@@ -35,3 +35,13 @@ export interface Membresia{
     Id: string
     Value: boolean
 }
+
+export interface Resultado{
+    Deporte: string,
+    Local:string,
+    Visitante:string,
+    Prediccion:string,
+    Resultado:string,
+    Puntos:string,
+    Fecha:string
+}

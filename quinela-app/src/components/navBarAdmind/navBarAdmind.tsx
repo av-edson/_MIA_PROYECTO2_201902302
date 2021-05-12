@@ -2,6 +2,7 @@ import React from "react";
 import { UserPass } from "../../models/usuarioModel";
 import { Deportes } from "../CargaMasiva/Deportes";
 import { CargaMasiva } from "../CargaMasiva/Masiva";
+import { ListaUsuarios } from "../CargaMasiva/Usuarios";
 import { UsserProfile } from "../UsserProfile/UsserProfile";
 
 export class NavAdmind  extends React.Component{
@@ -133,7 +134,7 @@ export class NavAdmind  extends React.Component{
                 <h2>vista 4</h2>
               }
               {this.state.noVista===5 && 
-                <h2>vista 5</h2>
+                <ListaUsuarios/>
               }
               {this.state.noVista===6 && 
                 <Deportes/>
